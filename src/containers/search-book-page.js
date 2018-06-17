@@ -1,8 +1,65 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Book from '../components/book';
+import InputSearch from '../components/input-search';
+import * as BooksAPI from '../api/BooksAPI';
 
 class SearchBookPage extends Component {
+    state = {
+        books: [],
+        loading: false,
+    }
+
+    onChange = (value) => {
+        if (value.length > 0) {
+            this.setState({
+                loading: true,
+            })
+            BooksAPI.search(value)
+                .then((res) => {
+                    const books = (res.error) ? [] : res;
+                    this.setState({
+                        books,
+                        loading: false,
+                    });
+                });
+        } else {
+            this.setState({
+                books: [],
+                loading: false,
+            });
+        }
+    }
+
+    onChangeShelf = (book, shelf) => {
+        BooksAPI.update(book, shelf);
+    }
+
+    renderLoading() {
+        return (
+            <div className='loading-content'></div>
+        );
+    }
+
+    renderResults() {
+        const { books } = this.state;
+        return (
+            <div className="search-books-results">
+                <ol className="books-grid">
+                    {books.map(book => (
+                        <Book
+                            key={book.id}
+                            book={book}
+                            onChangeShelf={this.onChangeShelf}
+                        />
+                    ))}
+                </ol>
+            </div>
+        );
+    }
+
     render() {
+        const { loading } = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -21,13 +78,18 @@ class SearchBookPage extends Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                        <input type="text" placeholder="Search by title or author" />
+                        <InputSearch
+                            placeholder="Search by title or author"
+                            onChange={this.onChange}
+                        />
 
                     </div>
                 </div>
-                <div className="search-books-results">
-                    <ol className="books-grid"></ol>
-                </div>
+                {
+                    loading ?
+                        this.renderLoading()
+                        : this.renderResults()
+                }
             </div>
         );
     }
