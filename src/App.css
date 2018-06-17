@@ -172,3 +172,11 @@ body, .app {
   text-align: center;
   font-size: 0.8em;
 }
+
+/* loading */
+.loading-content {
+  position: fixed;
+  width: 100%;
+  height: calc(100vh - 68px);
+  background: url(./icons/loading.svg) no-repeat center;
+}
