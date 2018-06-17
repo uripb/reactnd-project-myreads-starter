@@ -6,6 +6,7 @@ const activeShelfs = ['currentlyReading', 'wantToRead', 'read'];
 const Book = (props) => {
     const { book, onChangeShelf } = props;
     const bookShelf = activeShelfs.includes(book.shelf) ? book.shelf : 'none';
+    const imgUrl = (book.imageLinks) ? book.imageLinks.thumbnail : '';
 
     return (
         <li>
@@ -14,7 +15,7 @@ const Book = (props) => {
                     <div className="book-cover" style={{
                         width: 128,
                         height: 193,
-                        backgroundImage: `url(${book.imageLinks.thumbnail}`
+                        backgroundImage: `url(${imgUrl}`
                     }}></div>
                     <div className="book-shelf-changer">
                         <select 
