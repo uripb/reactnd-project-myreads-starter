@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const activeShelfs = ['currentlyReading', 'wantToRead', 'read'];
+
 const Book = (props) => {
     const { book, onChangeShelf } = props;
+    const bookShelf = activeShelfs.includes(book.shelf) ? book.shelf : 'none';
 
     return (
         <li>
@@ -15,7 +18,7 @@ const Book = (props) => {
                     }}></div>
                     <div className="book-shelf-changer">
                         <select 
-                            value={book.shelf}
+                            value={bookShelf}
                             onChange={(event) => onChangeShelf(book, event.target.value)}
                         >
                             <option value="move" disabled>Move to...</option>
@@ -27,7 +30,7 @@ const Book = (props) => {
                     </div>
                 </div>
                 <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.length > 0 ? book.authors.join(', ') : ''}</div>
+                <div className="book-authors">{book.authors && book.authors.join(', ')}</div>
             </div>
         </li>
     );
