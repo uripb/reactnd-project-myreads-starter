@@ -1,37 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import * as BooksAPI from '../api/BooksAPI';
 import BookShelf from '../components/book-shelf';
 
 class ListBooksPage extends Component {
-    state = {
-        books: [],
-        loading: false,
-    }
-
-    componentDidMount() {
-        this.getAllBooks();
-    }
-
-    getAllBooks = () => {
-        this.setState({
-            loading: true,
-        })
-        BooksAPI.getAll()
-            .then((books) => {
-                this.setState({
-                    books,
-                    loading: false,
-                });
-            });
-    }
-
-    onChangeShelf = (book, shelf) => {
-        BooksAPI.update(book, shelf)
-            .then(() => {
-                this.getAllBooks();
-            });
-    }
 
     renderLoading() {
         return (
@@ -40,7 +12,7 @@ class ListBooksPage extends Component {
     }
 
     renderListContent() {
-        const { books } = this.state;
+        const { books, onChangeShelf } = this.props;
         const currentlyBooks = books.filter(book => book.shelf === 'currentlyReading');
         const wantToRead = books.filter(book => book.shelf === 'wantToRead');
         const readBooks = books.filter(book => book.shelf === 'read');
@@ -50,17 +22,17 @@ class ListBooksPage extends Component {
                     <BookShelf
                         title='Currently Reading'
                         books={currentlyBooks}
-                        onChangeShelf={this.onChangeShelf}
+                        onChangeShelf={onChangeShelf}
                     />
                     <BookShelf
                         title='Want to Read'
                         books={wantToRead}
-                        onChangeShelf={this.onChangeShelf}
+                        onChangeShelf={onChangeShelf}
                     />
                     <BookShelf
                         title='Read'
                         books={readBooks}
-                        onChangeShelf={this.onChangeShelf}
+                        onChangeShelf={onChangeShelf}
                     />
                 </div>
             </div>
@@ -68,7 +40,7 @@ class ListBooksPage extends Component {
     }
 
     render() {
-        const { loading } = this.state;
+        const { loading } = this.props;
 
         return (
             <Fragment>
@@ -89,6 +61,17 @@ class ListBooksPage extends Component {
         );
     }
 
+}
+
+ListBooksPage.defaultProps = {
+    books: [],
+    loading: false,
+}
+
+ListBooksPage.propTypes = {
+    books: PropTypes.array.isRequired,
+    loading: PropTypes.bool,
+    onChangeShelf: PropTypes.func.isRequired,
 }
 
 export default ListBooksPage;

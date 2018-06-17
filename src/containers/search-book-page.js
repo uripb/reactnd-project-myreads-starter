@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Book from '../components/book';
 import InputSearch from '../components/input-search';
@@ -6,51 +7,36 @@ import * as BooksAPI from '../api/BooksAPI';
 
 class SearchBookPage extends Component {
     state = {
-        books: [],
-        loading: false,
+        booksFound: [],
     }
 
     onChange = (value) => {
         if (value.length > 0) {
-            this.setState({
-                loading: true,
-            })
             BooksAPI.search(value)
                 .then((res) => {
-                    const books = (res.error) ? [] : res;
+                    const booksFound = (res.error) ? [] : res;
                     this.setState({
-                        books,
-                        loading: false,
+                        booksFound,
                     });
                 });
         } else {
             this.setState({
-                books: [],
-                loading: false,
+                booksFound: [],
             });
         }
     }
 
-    onChangeShelf = (book, shelf) => {
-        BooksAPI.update(book, shelf);
-    }
-
-    renderLoading() {
-        return (
-            <div className='loading-content'></div>
-        );
-    }
-
     renderResults() {
-        const { books } = this.state;
+        const { onChangeShelf } = this.props;
+        const { booksFound } = this.state;
         return (
             <div className="search-books-results">
                 <ol className="books-grid">
-                    {books.map(book => (
+                    {booksFound.map(book => (
                         <Book
                             key={book.id}
                             book={book}
-                            onChangeShelf={this.onChangeShelf}
+                            onChangeShelf={onChangeShelf}
                         />
                     ))}
                 </ol>
@@ -59,7 +45,6 @@ class SearchBookPage extends Component {
     }
 
     render() {
-        const { loading } = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -70,30 +55,26 @@ class SearchBookPage extends Component {
                         Close
                     </Link>
                     <div className="search-books-input-wrapper">
-                        {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
                         <InputSearch
                             placeholder="Search by title or author"
                             onChange={this.onChange}
                         />
-
                     </div>
                 </div>
-                {
-                    loading ?
-                        this.renderLoading()
-                        : this.renderResults()
-                }
+                {this.renderResults()}
             </div>
         );
     }
 
+}
+
+SearchBookPage.defaultProps = {
+    books: [],
+}
+
+SearchBookPage.propTypes = {
+    books: PropTypes.array.isRequired,
+    onChangeShelf: PropTypes.func.isRequired,
 }
 
 export default SearchBookPage;
