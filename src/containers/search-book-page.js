@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Book from '../components/book';
 import InputSearch from '../components/input-search';
 import * as BooksAPI from '../api/BooksAPI';
 
-class SearchBookPage extends Component {
+class SearchBookPage extends PureComponent {
     state = {
         booksFound: [],
     }
@@ -16,7 +16,7 @@ class SearchBookPage extends Component {
                 .then((res) => {
                     const booksFound = (res.error) ? [] : res;
                     this.setState({
-                        booksFound,
+                        booksFound: this.setBookShelf(booksFound),
                     });
                 });
         } else {
@@ -24,6 +24,18 @@ class SearchBookPage extends Component {
                 booksFound: [],
             });
         }
+    }
+
+    /* needs to set book shelf because result books don't have shelf value */
+    setBookShelf = (booksFound) => {
+        const { books } = this.props;
+        return booksFound.map(item => {
+            const book = books.find(b => b.id === item.id);
+            if (book) {
+                item.shelf = book.shelf;
+            }
+            return item;
+        });
     }
 
     renderResults() {
