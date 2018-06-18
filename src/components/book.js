@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { BOOK_SHELF } from '../constants';
 
 const activeShelfs = ['currentlyReading', 'wantToRead', 'read'];
 
@@ -18,14 +19,18 @@ const Book = (props) => {
                         backgroundImage: `url(${imgUrl}`
                     }}></div>
                     <div className="book-shelf-changer">
-                        <select 
+                        <select
                             value={bookShelf}
                             onChange={(event) => onChangeShelf(book, event.target.value)}
                         >
                             <option value="move" disabled>Move to...</option>
-                            <option value="currentlyReading">Currently Reading</option>
-                            <option value="wantToRead">Want to Read</option>
-                            <option value="read">Read</option>
+                            {BOOK_SHELF.map(shelf => (
+                                <option
+                                    key={shelf.key}
+                                    value={shelf.key}>
+                                    {shelf.name}
+                                </option>
+                            ))}
                             <option value="none">None</option>
                         </select>
                     </div>

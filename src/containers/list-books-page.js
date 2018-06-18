@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import BookShelf from '../components/book-shelf';
+import { BOOK_SHELF } from '../constants';
 
 class ListBooksPage extends Component {
 
@@ -13,27 +14,18 @@ class ListBooksPage extends Component {
 
     renderListContent() {
         const { books, onChangeShelf } = this.props;
-        const currentlyBooks = books.filter(book => book.shelf === 'currentlyReading');
-        const wantToRead = books.filter(book => book.shelf === 'wantToRead');
-        const readBooks = books.filter(book => book.shelf === 'read');
+
         return (
             <div className="list-books-content">
                 <div>
-                    <BookShelf
-                        title='Currently Reading'
-                        books={currentlyBooks}
-                        onChangeShelf={onChangeShelf}
-                    />
-                    <BookShelf
-                        title='Want to Read'
-                        books={wantToRead}
-                        onChangeShelf={onChangeShelf}
-                    />
-                    <BookShelf
-                        title='Read'
-                        books={readBooks}
-                        onChangeShelf={onChangeShelf}
-                    />
+                    {BOOK_SHELF.map(shelf => (
+                        <BookShelf
+                            key={shelf.key}
+                            title={shelf.name}
+                            books={books.filter(book => book.shelf === shelf.key)}
+                            onChangeShelf={onChangeShelf}
+                        />
+                    ))}
                 </div>
             </div>
         );
