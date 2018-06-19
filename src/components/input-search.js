@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
-const WAIT_INTERVAL = 300;
-const ENTER_KEY = 13;
+import { WAIT_INTERVAL, ENTER_KEY } from '../constants';
 
 class InputSearch extends PureComponent {
     constructor(props) {
@@ -11,7 +9,7 @@ class InputSearch extends PureComponent {
             value: props.value || '',
         }
     }
-    
+
     componentWillMount() {
         this.timer = null;
     }
