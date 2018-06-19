@@ -26,7 +26,10 @@ class SearchBookPage extends PureComponent {
         }
     }
 
-    /* needs to set book shelf because result books don't have shelf value */
+    /**
+    * @description Set book shelf because result books don't have shelf value
+    * @param {Array} booksFound - List of books (search result)
+    */
     setBookShelf = (booksFound) => {
         const { books } = this.props;
         return booksFound.map(item => {
