@@ -2,7 +2,7 @@
 
 MyReads Project is a bookshelf app that allows you to select and categorize books you have read, are currently reading, or want to read. In addition, the application allows you to search for new books and categorize them.
 
-## Insall and Start
+## Install and Start
 
 To install and start the project is necessary [npm](https://www.npmjs.com/).
 
